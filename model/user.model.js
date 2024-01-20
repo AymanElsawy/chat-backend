@@ -10,6 +10,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    chatList:[
+        {
+          receiverId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+          },
+          messageId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Message"
+          }
+        }
+    ]
   },
   {
     timestamps: true, // createdAt, updatedAt

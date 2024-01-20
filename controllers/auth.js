@@ -117,3 +117,21 @@ export function getUser(req, res) {
       .json({ message: err });
   })
 }
+
+export function getAllUsers(req,res){
+  User.find()
+  .select("-password")
+  .then((users) => {
+    if (!users) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Users not found" });
+    }
+    return res.status(StatusCodes.OK).json(users);
+  })
+  .catch((err) => {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: err });
+  })
+}
