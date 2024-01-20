@@ -4,29 +4,32 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
 export async function login(req, res) {
-  const { username, password } = req.body;
+  const { username, password } = req.body; // extract username and password from req.body
   if (!username || !password) {
+    // check if username and password are provided
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: "Username and password are required" });
   }
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username }); // check if user exists
   if (user) {
     return bcrypt.compare(password, user.password).then((isMatch) => {
+      // compare password
       if (isMatch) {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          // create JWT token
           expiresIn: "1h",
         });
-        return res
+        return res // return success response
           .status(StatusCodes.OK)
           .json({ message: "Login successful", token });
       }
-      return res
+      return res // return error response if password is incorrect
         .status(StatusCodes.UNAUTHORIZED)
         .json({ message: "Invalid password" });
     });
   }
-  return res
+  return res // return error response if user does not exist
     .status(StatusCodes.UNAUTHORIZED)
     .json({ message: "Invalid username" });
 }
@@ -79,7 +82,7 @@ export async function signup(req, res) {
       .then((user) => {
         const token = jwt.sign(
           // generate JWT token
-          { _id: user._id, username: user.username },
+          { id: user._id },
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
@@ -94,4 +97,23 @@ export async function signup(req, res) {
         });
       });
   });
+}
+
+export function getUser(req, res) {
+  const id = req.params.id;
+  User.findById(id)
+  .select("-password")
+  .then((user) => {
+    if (!user) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "User not found" });
+    }
+    return res.status(StatusCodes.OK).json(user);
+  })
+  .catch((err) => {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ message: err });
+  })
 }
