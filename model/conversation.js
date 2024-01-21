@@ -12,6 +12,21 @@ const conversationSchema = new mongoose.Schema({
                 ref: "User"
             }
         }
+    ],
+    messages:[
+        {
+            text: String,
+            sender: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            receiver: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            isRead: {type:Boolean,default:false},
+            createdAt: {type:Date,default:Date.now()}
+        }
     ]
         
     

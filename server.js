@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from 'cors';
 import authRoute from "./routes/auth.js";
+import chatRoute from "./routes/chat.js";
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(process.env.API_VERSION, authRoute);
+app.use(process.env.API_VERSION, chatRoute);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

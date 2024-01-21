@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    chatList:[
+    conversations:[
         {
           receiverId: {
             type: mongoose.Schema.Types.ObjectId,
