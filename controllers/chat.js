@@ -95,11 +95,6 @@ export function sendMessage(req, res) {
         {"members.sneder": receiverId, "members.receiver": senderId}
       ]
     }).then((result) => {
-        if (!result) { // check if conversation exists
-            return res
-              .status(StatusCodes.NOT_FOUND)
-              .json({ message: "Conversation not found" }); // return error response if conversation is not found
-          }
           return res.status(StatusCodes.OK).json(result) // return success response
     }).catch((err) => {
         return res

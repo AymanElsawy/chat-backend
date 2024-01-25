@@ -102,7 +102,15 @@ export async function signup(req, res) {
 export function getUser(req, res) {
   const id = req.params.id;
   User.findById(id)
+  .populate({
+    path: "conversations",
+    populate: {
+      path: "messageId",
+      model: "Conversation",
+    },
+  })
   .select("-password")
+ 
   .then((user) => {
     if (!user) {
       return res
