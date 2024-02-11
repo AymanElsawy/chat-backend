@@ -104,11 +104,19 @@ export function getUser(req, res) {
   User.findById(id)
   .populate({
     path: "conversations",
-    populate: {
-      path: "messageId",
-      model: "Conversation",
-    },
-  })
+    populate: [
+      {
+        path: "receiverId",
+        model: "User",
+      },
+      {
+        path: "messageId",
+        model: "Conversation",
+      }
+    ]
+})
+
+
   .select("-password")
  
   .then((user) => {
@@ -143,3 +151,4 @@ export function getAllUsers(req,res){
       .json({ message: err });
   })
 }
+
